@@ -22,10 +22,7 @@ var roleUpgrader = {
                 if (!(s.store && s.store.energy >= creep.carryCapacity)) return false;
 
                 if (s.structureType == STRUCTURE_CONTAINER) {
-                    if (!Memory.structures) Memory.structures = {};
-                    if (!Memory.structures[s.id]) Memory.structures[s.id] = {};
-                    if (!Memory.structures[s.id].mine) Memory.structures[s.id].mine = false;
-                    return Memory.structures[s.id].mine == false;
+                    return s.store[RESOURCE_ENERGY] > 0;
                 }
                 if (s.structureType == STRUCTURE_STORAGE) return true;
 

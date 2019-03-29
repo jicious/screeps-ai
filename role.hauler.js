@@ -1,3 +1,5 @@
+var utils = require('utils');
+
 var roleHauler = {
 
     /** @param {Creep} creep **/
@@ -34,7 +36,7 @@ var roleHauler = {
             }
             let res = creep[method](source, RESOURCE_ENERGY);
             if (source && res == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);
+                creep.moveTo(source, utils.pathVis);
             } else if (source) {
                 creep.memory.sourceID = source.id;
             }
@@ -47,7 +49,7 @@ var roleHauler = {
                     creep.memory.unloading = true;
                 } else {
                     if (Game.flags['RallyHaulers']) {
-                        creep.moveTo(Game.flags['RallyHaulers']);
+                        creep.moveTo(Game.flags['RallyHaulers'], utils.pathVis);
                         creep.say('💤');
                     }
                 }
@@ -60,14 +62,20 @@ var roleHauler = {
             // } while (i < 10);
             let target = findDeliveryTarget(creep);
             if (target) {
+                creep.say('⚡');
                 let res = creep.transfer(target, RESOURCE_ENERGY);
                 if (res == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target);
+                    creep.moveTo(target, utils.pathVis);
                 } else if (res != OK) {
                     if (Game.flags['RallyHaulers']) {
-                        creep.moveTo(Game.flags['RallyHaulers']);
+                        creep.moveTo(Game.flags['RallyHaulers'], utils.pathVis);
                         creep.say('💤');
                     }
+                }
+            } else {
+                if (Game.flags['RallyHaulers']) {
+                    creep.moveTo(Game.flags['RallyHaulers'], utils.pathVis);
+                    creep.say('💤');
                 }
             }
         }
@@ -83,7 +91,6 @@ function findDeliveryTarget(creep) {
     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: (s) => {
             if (!isValidDelivery(Game.getObjectById(creep.memory.sourceID), s)) return false;
-            // console.log('Found valid delivery:', Game.getObjectById(creep.memory.sourceID).structureType, s.structureType);
             if (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE) {
                 if (!Memory.structures) Memory.structures = {};
                 if (!Memory.structures[s.id]) Memory.structures[s.id] = {};
@@ -105,8 +112,9 @@ function findDeliveryTarget(creep) {
 }
 
 function isValidDelivery(a, b) {
-    if (!a || !b) return false;
+    if (!a || !b) return true;
     if (a.id == b.id) return false;
+    // console.log(a.structureType + ' -> ' + b.structureType + '?');
     if (a.structureType == STRUCTURE_STORAGE) {
         if (b.structureType == STRUCTURE_CONTAINER) {
             // Can transfer from Storage -> Normal Containers
@@ -134,6 +142,7 @@ function isValidDelivery(a, b) {
             return true;
         }
     }
+    if (a.resourceType == RESOURCE_ENERGY) return true;
     return false;
 }
 

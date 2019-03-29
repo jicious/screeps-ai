@@ -23,5 +23,15 @@ BODY_VALUE[HEAL] = 14;
 BODY_VALUE[CLAIM] = 1;
 BODY_VALUE[TOUGH] = 0;
 module.exports.bodySort = (a, b) => {
-    return BODY_VALUE[a] - BODY_VALUE[b];
-}
+  return BODY_VALUE[a] - BODY_VALUE[b];
+};
+
+module.exports.pathVis = {
+  visualizePathStyle: {
+    fill: 'transparent',
+    stroke: '#fff',
+    lineStyle: 'dashed',
+    strokeWidth: .15,
+    opacity: .1
+  }
+};

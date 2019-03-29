@@ -22,13 +22,14 @@ module.exports.loop = function () {
         var creep = Game.creeps[name];
         
         // try {
-            if (roles[creep.memory.role]) roles[creep.memory.role].run(creep);
+            if (roles[creep.memory.role]){
+                roles[creep.memory.role].run(creep);
+            }
         // } catch (e) {
         //     console.log('Error running creep behaviour!', e);
         // }
 
     }
-    
     
     // for (let f in Memory.flags) {
     //     if (!Game.flags[f]) {

@@ -57,7 +57,7 @@ exports.run = function(spawn) {
         if (!Game.creeps[c]) delete Memory.creeps[c];
     }
 
-    var workerBody = [], bodyIteration = [CARRY,WORK,MOVE];
+    var workerBody = [], bodyIteration = [CARRY,WORK,MOVE,MOVE];
     while(calcBodyCost(workerBody) + calcBodyCost(bodyIteration) <= Game.spawns.Spawn1.room.energyAvailable &&
           workerBody.length + bodyIteration.length <= MAX_CREEP_SIZE) {
         workerBody = workerBody.concat(bodyIteration);
