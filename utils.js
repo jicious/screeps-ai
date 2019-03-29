@@ -35,3 +35,14 @@ module.exports.pathVis = {
     opacity: .1
   }
 };
+
+module.exports.makePathVis = (opts) => {
+  let v = {};
+  for (let a in module.exports.pathVis) {
+    v[a] = module.exports.pathVis[a];
+  }
+  for (let a in opts) {
+    v[a] = opts[a];
+  }
+  return v;
+}
