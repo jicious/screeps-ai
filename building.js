@@ -73,7 +73,7 @@ exports.run = function(spawn) {
     //spawn.createCreep(workerBody, 'h3', {role: 'harvester'});
     // spawn.createCreep(workerBody, 'h2', {role: 'harvester'});
     // spawn.createCreep(workerBody, 'h1', {role: 'harvester'});
-    
+
     var minerCount = 0;
     for (let name in Game.creeps) {
         if (Game.creeps[name].memory.role == 'miner') minerCount++;
@@ -97,7 +97,7 @@ exports.run = function(spawn) {
             }
         }
     }
-    
+
     // If there's too much energy in storage
     if (energyInStorage(spawn.room) > 2000 && countRoles('hauler') < 6) {
         spawnHauler(spawn, spawn.room.energyCapacityAvailable);
