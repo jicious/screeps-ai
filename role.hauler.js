@@ -64,6 +64,10 @@ var roleHauler = {
             if (target) {
                 creep.say('⚡');
                 let res = creep.transfer(target, RESOURCE_ENERGY);
+                if (res == ERR_FULL) {
+                    if (!Memory.structures[target.id]) Memory.structures[target.id] = {};
+                    Memory.structures[target.id].lastFull = Game.time;
+                }
                 if (res == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, utils.pathVis);
                 } else if (res != OK) {
@@ -102,6 +106,12 @@ function findDeliveryTarget(creep) {
             }
             if (s.structureType == STRUCTURE_STORAGE) {
                 return s.store.energy < s.storeCapacity;
+            }
+            if (s.structureType == STRUCTURE_TOWER) {
+                if (!Memory.structures[s.id]) Memory.structures[s.id] = {};
+                if (Memory.structures[s.id].lastFull < Game.time - 100 || s.energy < s.energyCapacity / 2) {
+                    return true;
+                }
             }
             return (s.structureType == STRUCTURE_EXTENSION ||
                 s.structureType == STRUCTURE_SPAWN ||
