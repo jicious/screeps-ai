@@ -65,8 +65,8 @@ exports.run = function(spawn) {
     workerBody.sort(utils.bodySort);
 
     spawn.spawnCreep(workerBody, 'u1', {memory: {role: 'upgrader'}});
-    // spawn.spawnCreep(workerBody, 'u2', {memory: {role: 'upgrader'}});
-    // spawn.spawnCreep(workerBody, 'u3', {memory: {role: 'upgrader'}});
+    spawn.spawnCreep(workerBody, 'u2', {memory: {role: 'upgrader'}});
+    spawn.spawnCreep(workerBody, 'u3', {memory: {role: 'upgrader'}});
     if(spawn.room.find(FIND_CONSTRUCTION_SITES).length > 0) spawn.spawnCreep(workerBody, 'b1', {memory: {role: 'builder'}});
     //if(spawn.room.find(FIND_CONSTRUCTION_SITES).length > 2) spawn.spawnCreep(workerBody, 'b2', {memory: {role: 'builder'}});
     //if(spawn.room.find(FIND_CONSTRUCTION_SITES).length > 5) spawn.spawnCreep(workerBody, 'b3', {memory: {role: 'builder'}});
