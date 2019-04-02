@@ -1,13 +1,13 @@
 var roles = {
-    'harvester': require('role.harvester'),
-    'upgrader': require('role.upgrader'),
-    'builder': require('role.builder'),
-    'miner': require('role.miner'),
-    'hauler': require('role.hauler')
+    'harvester': require('./role.harvester'),
+    'upgrader': require('./role.upgrader'),
+    'builder': require('./role.builder'),
+    'miner': require('./role.miner'),
+    'hauler': require('./role.hauler')
 };
 
-var building = require('building');
-var tower = require('tower');
+var building = require('./building');
+var tower = require('./tower');
 
 module.exports.loop = function () {
     

@@ -1461,6 +1461,10 @@ interface RoomObject {
      */
     room: Room | undefined;
 }
+interface RoomTerrain {
+    get(x: number, y: number): number;
+    getRawBuffer(destinationArray: Uint8Array): Uint8Array;
+}
 interface RoomObjectConstructor extends _Constructor<RoomObject> {
     new (x: number, y: number, roomName: string): RoomObject;
     (x: number, y: number, roomName: string): RoomObject;
@@ -1876,6 +1880,7 @@ interface Room {
      * @param y The Y position.
      * @returns An array with objects at the specified position
      */
+    getTerrain(): RoomTerrain;
     lookAt(x: number, y: number): LookAtResult[];
     /**
      * Get the list of objects at the specified room position.
@@ -1921,7 +1926,18 @@ interface Room {
      * @param right The right X boundary of the area.
      * @returns An object with all the objects of the given type in the specified area
      */
-    lookForAtArea(type: string, top: number, left: number, bottom: number, right: number, asArray?: boolean): LookAtResultMatrix | LookAtResultWithPos[];
+    lookForAtArea(type: string, top: number, left: number, bottom: number, right: number): LookAtResultMatrix;
+    /**
+     * Get the list of objects with the given type at the specified room area. This method is more CPU efficient in comparison to multiple lookForAt calls.
+     * @param type One of the following string constants: constructionSite, creep, energy, exit, flag, source, structure, terrain
+     * @param top The top Y boundary of the area.
+     * @param left The left X boundary of the area.
+     * @param bottom The bottom Y boundary of the area.
+     * @param right The right X boundary of the area.
+     * @param asArray Whether or not to return results as array.
+     * @returns An object with all the objects of the given type in the specified area
+     */
+    lookForAtArea(type: string, top: number, left: number, bottom: number, right: number, asArray: boolean): LookAtResultWithPos[];
 }
 interface RoomConstructor {
     new (id: string): Room;

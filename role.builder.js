@@ -1,4 +1,4 @@
-var utils = require('utils');
+var Utils = require('./utils');
 
 var roleBuilder = {
 

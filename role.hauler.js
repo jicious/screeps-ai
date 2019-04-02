@@ -1,4 +1,4 @@
-var utils = require('utils');
+var Utils = require('./utils');
 
 var roleHauler = {
 
@@ -21,22 +21,35 @@ var roleHauler = {
                 creep.say('🥃');
                 method = 'withdraw';
                 source = creep.pos.findClosestByPath(FIND_STRUCTURES, {filter: (s) => {
-                    if (!(s.store && s.store.energy > 0)) return false;
+                    if (!(s.store && s.store.energy > 0)) {
+                        //Utils.outline(s, '#c00');
+                        return false;
+                    }
     
                     if (s.structureType == STRUCTURE_CONTAINER) {
                         if (!Memory.structures) Memory.structures = {};
                         if (!Memory.structures[s.id]) Memory.structures[s.id] = {};
                         if (!Memory.structures[s.id].mine) Memory.structures[s.id].mine = false;
-                        return Memory.structures[s.id].mine == true;
+                        if (Memory.structures[s.id].mine == true) {
+                            //Utils.outline(s, '#0c0');
+                            return true;
+                        } else {
+                            //Utils.outline(s, '#cc0');
+                            return false;
+                        }
                     }
-                    if (s.structureType == STRUCTURE_STORAGE) return true;
+                    if (s.structureType == STRUCTURE_STORAGE) {
+                        //Utils.outline(s, '#0c0');
+                        return true;
+                    }
     
+                    //Utils.outline(s, '#c00');
                     return false;
                 }});
             }
             let res = creep[method](source, RESOURCE_ENERGY);
             if (source && res == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source, utils.pathVis);
+                creep.moveTo(source, Utils.pathVis);
             } else if (source) {
                 creep.memory.sourceID = source.id;
             }
@@ -49,8 +62,8 @@ var roleHauler = {
                     creep.memory.unloading = true;
                 } else {
                     if (Game.flags['RallyHaulers']) {
-                        creep.moveTo(Game.flags['RallyHaulers'], utils.pathVis);
-                        creep.say('💤');
+                        creep.moveTo(Game.flags['RallyHaulers'], Utils.pathVis);
+                        creep.say('💤' + res);
                     }
                 }
             }
@@ -69,17 +82,17 @@ var roleHauler = {
                     Memory.structures[target.id].lastFull = Game.time;
                 }
                 if (res == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, utils.pathVis);
+                    creep.moveTo(target, Utils.pathVis);
                 } else if (res != OK) {
                     if (Game.flags['RallyHaulers']) {
-                        creep.moveTo(Game.flags['RallyHaulers'], utils.pathVis);
-                        creep.say('💤');
+                        creep.moveTo(Game.flags['RallyHaulers'], Utils.pathVis);
+                        creep.say('💤' + res);
                     }
                 }
             } else {
                 if (Game.flags['RallyHaulers']) {
-                    creep.moveTo(Game.flags['RallyHaulers'], utils.pathVis);
-                    creep.say('💤');
+                    creep.moveTo(Game.flags['RallyHaulers'], Utils.pathVis);
+                    creep.say('💤3');
                 }
             }
         }
@@ -94,28 +107,42 @@ function findNearbyContainer(creep) {
 function findDeliveryTarget(creep) {
     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: (s) => {
-            if (!isValidDelivery(Game.getObjectById(creep.memory.sourceID), s)) return false;
+            if (!isValidDelivery(Game.getObjectById(creep.memory.sourceID), s)) {
+                //Utils.outline(s, '#c00');
+                return false;
+            }
             if (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE) {
                 if (!Memory.structures) Memory.structures = {};
                 if (!Memory.structures[s.id]) Memory.structures[s.id] = {};
                 if (!Memory.structures[s.id].mine) Memory.structures[s.id].mine = false;
+                //Utils.outline(s, '#c00');
                 return Memory.structures[s.id].mine == false;
             }
-            if (s.structureType == STRUCTURE_CONTROLLER) {
-                return s.progress < s.progressTotal;
-            }
             if (s.structureType == STRUCTURE_STORAGE) {
-                return s.store.energy < s.storeCapacity;
+                if (s.store.energy < s.storeCapacity) {
+                    //Utils.outline(s, '#0c0');
+                    return true;
+                } else {
+                    //Utils.outline(s, '#c00');
+                    return false;
+                }
             }
             if (s.structureType == STRUCTURE_TOWER) {
                 if (!Memory.structures[s.id]) Memory.structures[s.id] = {};
                 if (Memory.structures[s.id].lastFull < Game.time - 100 || s.energy < s.energyCapacity / 2) {
+                    //Utils.outline(s, '#0c0');
                     return true;
                 }
             }
-            return (s.structureType == STRUCTURE_EXTENSION ||
+            if ((s.structureType == STRUCTURE_EXTENSION ||
                 s.structureType == STRUCTURE_SPAWN ||
-                s.structureType == STRUCTURE_TOWER) && s.energy < s.energyCapacity;
+                s.structureType == STRUCTURE_TOWER) && s.energy < s.energyCapacity) {
+                //Utils.outline(s, '#0c0');
+                return true;
+            } else {
+                //Utils.outline(s, '#c00');
+                return false;
+            }
         }
     });
     return target;
